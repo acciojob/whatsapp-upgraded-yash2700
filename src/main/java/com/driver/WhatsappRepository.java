@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public class WhatsappRepository {
 
-    private static int groupCount=0;
-    private static int messageCount=0;
+    private  int groupCount=0;
+    private  int messageCount=0;
     HashMap<String,User> userList=new HashMap<>();
     HashMap<Group,List<User>>   groupList=new HashMap<>();
 
