@@ -98,39 +98,53 @@ public class WhatsappRepository {
 
     public int removeUser(User user)throws Exception{
 
-        int i=0;
-        Group requiredGroup=null;
+        boolean check=false;
+        Group group1=null;
         for(Group group:groupList.keySet()){
-            for(User users:groupList.get(group)){
-                if(users.equals(user)){
-                    requiredGroup=group;
-                    i=1;
+            for(User user1:groupList.get(group)){
+                if(user1.equals(user)){
+                    check=true;
+                    group1=group;
                     break;
                 }
             }
         }
-        if(i==0)
-            throw new RuntimeException("User not found");
-        if(groupList.get(requiredGroup).get(0)==user)
-            throw new RuntimeException("Cannot remove admin");
+        if(!check){
+            throw new Exception("User not found");
+        }
 
-        for(Group group:groupList.keySet()){
-            for(Message message:groupMessages.get(group))
-                if(userMessages.get(user).contains(message)){
+        if(groupList.get(group1).get(0).equals(user)){
+            throw new Exception("Cannot remove admin");
+        }
+
+        List<Message> userMessage=userMessages.get(user);
+
+        for(Group group:groupMessages.keySet()){
+            for(Message message:groupMessages.get(group)){
+                if(userMessage.contains(message)){
                     groupMessages.get(group).remove(message);
                 }
             }
+        }
 
         for(Message message:messageList){
-            if(userMessages.get(user).contains(message)){
+            if(userMessage.contains(message)){
                 messageList.remove(message);
             }
         }
-        groupList.get(requiredGroup).remove(user);
-        userMessages.remove(user);
-        return groupList.get(requiredGroup).size()+groupMessages.get(requiredGroup).size()+messageList.size();
 
-        }
+
+
+        groupList.get(group1).remove(user);
+
+        userMessages.remove(user);
+
+        return groupList.get(group1).size()+groupMessages.get(group1).size()+messageList.size();
+
+
+
+
+    }
         public String findMessage(Date start,Date end,int k){
         return "";
         }
